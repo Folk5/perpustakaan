@@ -25,6 +25,7 @@
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 60px;
         }
         .container {
             max-width: 600px;
@@ -57,6 +58,8 @@
     </style>
 </head>
 <body>
+    <jsp:include page="../includes/navbar.jsp" />
+    
     <div class="container">
         <div class="card p-4 shadow-sm rounded">
             <h3>Tambah Rak Buku Baru</h3>

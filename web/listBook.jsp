@@ -17,10 +17,10 @@
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 80px;
         }
         .container {
             max-width: 1200px;
-            margin-top: 50px;
         }
         .card {
             border-radius: 10px;
@@ -41,13 +41,12 @@
         }
         .table td, .table th {
             padding: 15px;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-<!--Start Header-->
         <jsp:include page="includes/navbar.jsp" />
-        <!--End Header-->
     <div class="container">
         <div class="text-center mb-4">
             <h1>Daftar Buku</h1>
@@ -62,53 +61,58 @@
         </div>
 
         <div class="card mb-4">
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama Buku</th>
-                        <th>Tipe Buku</th>
-                        <th>Jenis Buku</th>
-                        <th>Tanggal Terbit</th>
-                        <th>Author</th>
-                        <th>Jenis Rak</th>
-                        <th>Status Buku</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                        if (books != null && !books.isEmpty()) {
-                            for (Buku book : books) { 
-                    %>
-                    <tr>
-                        <td><%= book.getbuku_id() %></td>
-                        <td><%= book.getnama_buku() %></td>
-                        <td><%= book.gettipe_buku() %></td>
-                        <td><%= book.getjenis_buku() %></td>
-                        <td><%= book.gettgl_terbit() %></td>
-                        <td><%= book.getAuthor() %></td>
-                        <td><%= book.getJenisRak() %></td>
-                        <td>
-                            <%--<%= book.getstatus_booking() ? "Tidak Tersedia" : "Tersedia" %>--%>
-                            <% if (book.getstatus_booking()) { %>
-                            <p>Tidak Tersedia</p>
-                            <% }else{ %>
-                            <button class = "btn btn-secondary" href = "">Booking</button>
-                            <% } %>
-                        </td>
-                    </tr>
-                    <% 
-                            }
-                        } else { 
-                    %>
-                    <tr>
-                        <td colspan="7" class="text-center">Tidak ada buku ditemukan.</td>
-                    </tr>
-                    <% 
-                        } 
-                    %>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Buku</th>
+                            <th>Tipe Buku</th>
+                            <th>Jenis Buku</th>
+                            <th>Tanggal Terbit</th>
+                            <th>Author</th>
+                            <th>Jenis Rak</th>
+                            <th>Status Buku</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            if (books != null && !books.isEmpty()) {
+                                for (Buku book : books) { 
+                        %>
+                        <tr>
+                            <td><%= book.getbuku_id() %></td>
+                            <td><%= book.getnama_buku() %></td>
+                            <td><%= book.gettipe_buku() %></td>
+                            <td><%= book.getjenis_buku() %></td>
+                            <td><%= book.gettgl_terbit() %></td>
+                            <td><%= book.getAuthor() %></td>
+                            <td><%= book.getJenisRak() %></td>
+                            <td class="text-center">
+                                <% if (book.getstatus_booking()) { %>
+                                    <span class="badge bg-danger">Tidak Tersedia</span>
+                                <% } else { %>
+                                    <form action="Booking" method="POST">
+                                        <input type="hidden" name="return" value="false">
+                                        <input type="hidden" name="book_id" value="<%= book.getbuku_id() %>">
+                                        <button class="btn btn-primary btn-sm">Booking</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% 
+                                }
+                            } else { 
+                        %>
+                        <tr>
+                            <td colspan="8" class="text-center">Tidak ada buku ditemukan.</td>
+                        </tr>
+                        <% 
+                            } 
+                        %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -26,10 +26,11 @@
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 60px;
         }
         .container {
             max-width: 600px; 
-            margin-top: 50px;
+            margin-top: 30px;
         }
         .form-control {
             border-radius: 10px;
@@ -62,11 +63,15 @@
         .button-group .btn {
             width: auto;
         }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
+    <jsp:include page="../includes/navbar.jsp" />
     <div class="container">
-        <div class="card p-4 shadow-sm rounded">
+        <div class="card p-4 rounded">
             <h3>Edit Buku</h3>
             <%
                 String buku_id = request.getParameter("buku_id");
@@ -91,7 +96,7 @@
                         // Get rak data
                         rakResultSet = db.getData("SELECT * FROM rakbuku");
             %>
-            <form action="/perpustakaan/editBook" method="POST">
+            <form action="${pageContext.request.contextPath}/editBook" method="POST">
                 <input type="hidden" name="buku_id" value="<%= buku_id %>">
 
                 <div class="form-group">
@@ -143,8 +148,8 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" class="btn btn-primary w-48">Perbarui Buku</button>
-                    <a href="/perpustakaan/dashboard" class="btn btn-secondary w-48">Kembali</a>
+                    <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-secondary">Kembali</a>
+                    <button type="submit" class="btn btn-primary">Perbarui Buku</button>
                 </div>
             </form>
             <%

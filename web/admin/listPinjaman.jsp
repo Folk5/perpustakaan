@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listPinjaman
-    Created on : 6 Jan 2025, 03.16.25
-    Author     : alfin
---%>
-
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page import="model.Booking" %>
 <%@ page import="java.util.ArrayList" %>
@@ -23,120 +17,166 @@
             body {
                 background-color: #f8f9fa;
                 padding-top: 60px;
+                margin: 0;
             }
+            .container {
+                max-width: 1200px;
+                padding: 0 20px;
+            }
+            .header-section {
+                background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+                padding: 2rem 0;
+                margin-top: -60px;
+                margin-bottom: 2rem;
+                color: white;
+            }
+            .header-title {
+                font-size: 2.5rem;
+                font-weight: 600;
+                text-align: center;
+                margin: 0;
+                padding-top: 60px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            /* Rest of the styles remain the same */
             .card {
                 margin-bottom: 20px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: transform 0.2s;
+                border: none;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                transition: transform 0.2s, box-shadow 0.2s;
+                background: white;
+                border-radius: 12px;
             }
             .card:hover {
                 transform: translateY(-5px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .card-body {
+                padding: 1.5rem;
             }
             .status-badge {
-                padding: 5px 10px;
+                padding: 6px 12px;
                 border-radius: 20px;
-                font-size: 14px;
+                font-size: 0.85rem;
                 font-weight: 500;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
             }
             .status-active {
-                background-color: #d4edda;
-                color: #155724;
+                background-color: #e8f5e9;
+                color: #2e7d32;
             }
             .status-expired {
-                background-color: #f8d7da;
-                color: #721c24;
+                background-color: #ffebee;
+                color: #c62828;
             }
             .dates-section {
                 background-color: #f8f9fa;
-                padding: 10px;
-                border-radius: 8px;
-                margin: 10px 0;
+                padding: 15px;
+                border-radius: 10px;
+                margin: 15px 0;
             }
             .book-title {
-                color: #0d6efd;
+                color: #1a73e8;
                 font-weight: 600;
+                font-size: 1.2rem;
+                margin-bottom: 0.75rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
             }
             .member-name {
-                font-size: 0.9rem;
-                color: #6c757d;
+                font-size: 0.95rem;
+                color: #5f6368;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .date-label {
+                font-size: 0.8rem;
+                color: #80868b;
+                margin-bottom: 4px;
+            }
+            .date-value {
+                font-size: 0.95rem;
+                color: #202124;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .empty-state {
+                text-align: center;
+                padding: 3rem;
+                color: #5f6368;
             }
         </style>
     </head>
     <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="#">Perpustakaan</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="home">Beranda</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="listBooks">Daftar Buku</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="ListPinjamanController">Daftar Pinjaman</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <jsp:include page="../includes/navbar.jsp" />
 
-        <!-- Header -->
-        <div class="bg-dark text-white py-5 mb-4">
+        <div class="header-section">
             <div class="container">
-                <h1 class="text-center">Daftar Booking</h1>
+                <h1 class="header-title">Daftar Booking</h1>
             </div>
         </div>
 
-            <div class="row">
-                <% for (Booking booking : bookings) { 
-                    boolean isExpired = booking.getExpired_date().isBefore(java.time.LocalDate.now());
-                %>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="book-title mb-2">
-                                <i class="fas fa-book me-2"></i>
-                                <%= booking.getBukuDetail().getBuku().getnama_buku() %>
-                            </h5>
-                            
-                            <p class="member-name mb-3">
-                                <i class="fas fa-user me-2"></i>
-                                <%= booking.getMember().getNama_depan() %> <%= booking.getMember().getNama_belakang() %>
-                            </p>
-                            
-                            <div class="dates-section">
-                                <div class="mb-2">
-                                    <small class="text-muted">Tanggal Booking:</small><br>
-                                    <i class="far fa-calendar-alt me-2"></i>
-                                    <%= booking.getBooking_date().format(formatter) %>
+        <div class="container">
+            <% if (bookings != null && !bookings.isEmpty()) { %>
+                <div class="row">
+                    <% for (Booking booking : bookings) { 
+                        boolean isExpired = booking.getExpired_date().isBefore(java.time.LocalDate.now());
+                    %>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="book-title">
+                                    <i class="fas fa-book"></i>
+                                    <%= booking.getBukuDetail().getBuku().getnama_buku() %>
+                                </h5>
+                                
+                                <p class="member-name">
+                                    <i class="fas fa-user"></i>
+                                    <%= booking.getMember().getNama_depan() %> <%= booking.getMember().getNama_belakang() %>
+                                </p>
+                                
+                                <div class="dates-section">
+                                    <div class="mb-3">
+                                        <div class="date-label">Tanggal Booking</div>
+                                        <div class="date-value">
+                                            <i class="far fa-calendar-alt"></i>
+                                            <%= booking.getBooking_date().format(formatter) %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="date-label">Tanggal Expired</div>
+                                        <div class="date-value">
+                                            <i class="far fa-calendar-times"></i>
+                                            <%= booking.getExpired_date().format(formatter) %>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <small class="text-muted">Tanggal Expired:</small><br>
-                                    <i class="far fa-calendar-times me-2"></i>
-                                    <%= booking.getExpired_date().format(formatter) %>
-                                </div>
+                                
+                                <div class="text-end">
+                                    <span class="status-badge <%= isExpired ? "status-expired" : "status-active" %>">
+                                        <i class="fas <%= isExpired ? "fa-exclamation-circle" : "fa-check-circle" %>"></i>
+                                        <%= isExpired ? "Expired" : "Active" %>
+                                    </span>
+                                </div>                         
                             </div>
-                            
-                            <div class="mb-3">
-                                <span class="status-badge <%= isExpired ? "status-expired" : "status-active" %>">
-                                    <i class="fas <%= isExpired ? "fa-exclamation-circle" : "fa-check-circle" %> me-1"></i>
-                                    <%= isExpired ? "Expired" : "Active" %>
-                                </span>
-                            </div>                         
                         </div>
                     </div>
+                    <% } %>
                 </div>
-                <% } %>
-            </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-book-open fa-3x mb-3"></i>
+                    <h3>Tidak ada booking yang ditemukan</h3>
+                    <p>Saat ini tidak ada buku yang sedang dipinjam.</p>
+                </div>
+            <% } %>
         </div>
 
-        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

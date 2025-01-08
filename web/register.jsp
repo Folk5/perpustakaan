@@ -44,7 +44,7 @@
     <div class="container">
         <div class="card p-4 shadow-sm rounded">
             <h3 class="text-center">Formulir Registrasi</h3>
-            <form action="registerController" method="post" class="w-100">
+            <form action="register" method="post" class="w-100">
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" class="form-control" id="email" name="email" required>

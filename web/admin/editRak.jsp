@@ -1,9 +1,3 @@
-<%-- 
-    Document   : editRak
-    Created on : 23 Dec 2024, 17.10.42
-    Author     : farre
---%>
-
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="db.JDBC" %>
@@ -32,10 +26,11 @@
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 60px;
         }
         .container {
             max-width: 600px; 
-            margin-top: 50px;
+            margin-top: 30px;
         }
         .form-control {
             border-radius: 10px;
@@ -64,15 +59,21 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            gap: 10px;
         }
         .button-group .btn {
-            width: auto;
+            flex: 1;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
+    <jsp:include page="../includes/navbar.jsp" />
+    
     <div class="container">
-        <div class="card p-4 shadow-sm rounded">
+        <div class="card p-4 rounded">
             <h3>Edit Rak Buku</h3>
             <%
                 String rakId = request.getParameter("rakId");
@@ -85,7 +86,7 @@
                         String jenisRak = rs.getString("jenis_rak");
                         String lokasiRak = rs.getString("lokasi_rak");
             %>
-            <form action="/perpustakaan/editRak" method="POST">
+            <form action="${pageContext.request.contextPath}/editRak" method="POST">
                 <input type="hidden" name="rakId" value="<%= rakId %>">
 
                 <div class="form-group">
@@ -101,8 +102,8 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="submit" class="btn btn-primary w-48">Perbarui Rak</button>
-                    <a href="/perpustakaan/dashboard" class="btn btn-secondary w-48">Kembali</a>
+                    <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-secondary">Kembali</a>
+                    <button type="submit" class="btn btn-primary">Perbarui Rak</button>
                 </div>
             </form>
             <%
