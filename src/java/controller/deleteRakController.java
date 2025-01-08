@@ -23,11 +23,19 @@ public class deleteRakController extends HttpServlet {
             JDBC db = new JDBC();
             if (db.isConnected) {
                 try {
-                    String sql = "DELETE FROM rakbuku_id_fk WHERE rakbuku_id_fk = ?";
-                    PreparedStatement stmt = db.getConnection().prepareStatement(sql);
-                    stmt.setInt(1, Integer.parseInt(id));
-                    int rowsDeleted = stmt.executeUpdate(); 
-                    stmt.close();
+                    // First delete or update referencing books
+                    String updateBooksSQL = "UPDATE buku SET rakbuku_id_fk = NULL WHERE rakbuku_id_fk = ?";
+                    PreparedStatement updateStmt = db.getConnection().prepareStatement(updateBooksSQL);
+                    updateStmt.setInt(1, Integer.parseInt(id));
+                    updateStmt.executeUpdate();
+                    updateStmt.close();
+
+                    // Then delete the rack
+                    String deleteRakSQL = "DELETE FROM rakbuku WHERE rakbuku_id = ?";
+                    PreparedStatement deleteStmt = db.getConnection().prepareStatement(deleteRakSQL);
+                    deleteStmt.setInt(1, Integer.parseInt(id));
+                    int rowsDeleted = deleteStmt.executeUpdate();
+                    deleteStmt.close();
 
                     if (rowsDeleted > 0) {
                         System.out.println("Rak berhasil dihapus: ID " + id);
@@ -38,7 +46,7 @@ public class deleteRakController extends HttpServlet {
                     response.sendRedirect("dashboard");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    response.sendRedirect("error.jsp"); 
+                    response.sendRedirect("error.jsp");
                 } finally {
                     db.disconnect();
                 }
